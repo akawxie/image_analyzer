@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Send, Upload } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import Image from 'next/image'
 
 type UserMessage = {
@@ -114,7 +114,11 @@ export function ImageAnalyzerComponent() {
         { type: 'text', content: `AI: ${modelResponse}`, role: 'ai' }
       ])
     } catch (error) {
-      console.error("API Error:", error.response ? error.response.data : error.message)
+      if (axios.isAxiosError(error)) {
+        console.error("API Error:", error.response ? error.response.data : error.message)
+      } else {
+        console.error("Unexpected Error:", error)
+      }
       setError('Error processing the image. Please check the console for more details.')
     }
   }
