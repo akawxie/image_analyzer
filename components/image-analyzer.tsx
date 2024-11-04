@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Send, Upload } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import Image from 'next/image'
 
 type UserMessage = {
