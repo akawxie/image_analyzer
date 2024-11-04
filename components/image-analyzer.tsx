@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Send, Upload, Image as ImageIcon } from 'lucide-react'
+import { Send, Upload } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import axios from 'axios'
+import Image from 'next/image'
 
 type UserMessage = {
   type: 'text' | 'image';
@@ -20,11 +21,10 @@ type UserMessage = {
 
 export function ImageAnalyzerComponent() {
   const [files, setFiles] = useState<File[]>([])
-  const { messages, input, handleInputChange, setInput } = useChat()
+  const { messages, input, setInput } = useChat()
   const [error, setError] = useState('')
   const [userMessages, setUserMessages] = useState<UserMessage[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const defaultPrompts = [
@@ -35,10 +35,9 @@ export function ImageAnalyzerComponent() {
     "Generate a prompt to recreate this image"
   ]
 
-  // Scroll to the bottom of the dialogue area
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, userMessages]); // Trigger on changes to messages and userMessages
+  }, [messages, userMessages]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -136,7 +135,7 @@ export function ImageAnalyzerComponent() {
           <CardTitle className="text-3xl font-bold text-center">Image Analyzer</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <ScrollArea className="h-[50vh] pr-4 mb-6 border border-gray-200 rounded-lg shadow-inner" ref={scrollAreaRef}>
+          <ScrollArea className="h-[50vh] pr-4 mb-6 border border-gray-200 rounded-lg shadow-inner">
             <div className="p-4">
               {userMessages.map((userMessage, index) => (
                 <div key={index} className={`flex ${userMessage.role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
@@ -146,7 +145,7 @@ export function ImageAnalyzerComponent() {
                     </Avatar>
                     <div className={`mx-2 p-3 rounded-lg ${userMessage.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
                       {userMessage.type === 'image' ? (
-                        <img src={userMessage.content} alt="User uploaded" className="max-w-full h-auto rounded" />
+                        <Image src={userMessage.content} alt="User uploaded" width={500} height={300} className="max-w-full h-auto rounded" />
                       ) : (
                         <p className="text-sm">{userMessage.content}</p>
                       )}
