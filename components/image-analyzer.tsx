@@ -128,10 +128,10 @@ export function ImageAnalyzerComponent() {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        if (reader.result) {
+        if (reader.result && typeof reader.result === 'string') {
           resolve(reader.result.split(',')[1]);
         } else {
-          reject(new Error("File reading failed: result is null"));
+          reject(new Error("File reading failed: result is null or not a string"));
         }
       };
       reader.onerror = (error) => reject(error);
