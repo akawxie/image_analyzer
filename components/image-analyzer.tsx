@@ -124,13 +124,19 @@ export function ImageAnalyzerComponent() {
   }
 
   const convertToBase64 = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result.split(',')[1])
-      reader.onerror = (error) => reject(error)
-    })
-  }
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        if (reader.result) {
+          resolve(reader.result.split(',')[1]);
+        } else {
+          reject(new Error("File reading failed: result is null"));
+        }
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4 sm:p-6 md:p-8">
